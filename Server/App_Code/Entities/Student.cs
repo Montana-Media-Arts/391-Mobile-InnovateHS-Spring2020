@@ -6,6 +6,6 @@ using System.Web;
 namespace InnovateServer.App_Code.Entities
 {
     public class Student
-    {//asjkdlfhsdf
+    {
     }
 }
