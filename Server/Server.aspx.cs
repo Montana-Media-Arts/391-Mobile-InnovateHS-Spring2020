@@ -1,6 +1,9 @@
-﻿using System;
+﻿using InnovateServer.App_Code.Database;
+using InnovateServer.App_Code.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI;
@@ -15,11 +18,25 @@ namespace InnovateServer
 
         }
 
-        // Some example stuff I will try to link into JS...
-        //[WebMethod]
-        //public static RandoClass testMe(string name, int age, char gender)
-        //{
-        //    return new RandoClass("Bob", 9000, 'M');
-        //}
+        //Inserts a new student into the database with the provided data.
+        [WebMethod]
+        public static bool insertStudent(string firstName, string lastName, string email, string password, string school = null)
+        {
+            Student newStudent = new Student();
+            newStudent.FirstName = firstName;
+            newStudent.LastName = lastName;
+            newStudent.Email = email;
+            newStudent.School = school;
+
+            //Encode password as bytes for varbinary
+            UTF8Encoding encoder = new UTF8Encoding();
+            Byte[] passwordBytes = encoder.GetBytes(password);
+            newStudent.Password = passwordBytes;
+
+            StudentsTable studentsTable = new StudentsTable(new DatabaseConnection());
+            studentsTable.insertStudent(newStudent);
+
+            return true;
+        }
     }
 }
