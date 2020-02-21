@@ -15,7 +15,7 @@ namespace InnovateServer
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //insertStudent("1", "2", "3@4.com", "54321");
+
         }
 
         //Inserts a new student into the database with the provided data.
