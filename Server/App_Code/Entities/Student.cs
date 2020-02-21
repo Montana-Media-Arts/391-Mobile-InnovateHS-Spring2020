@@ -16,6 +16,7 @@ namespace InnovateServer.App_Code.Entities
         private string fbLiked;
         private string fbBetter;
         private string fbWantOfferings;
+        private string fbOther;
         private int[] topicChoices = new int[2];
         private int[] classChoices = new int[3];
 
@@ -30,5 +31,6 @@ namespace InnovateServer.App_Code.Entities
         public int[] ClassChoices { get => classChoices; set => classChoices = value; }
         public string School { get => school; set => school = value; }
         public byte[] Password { get => password; set => password = value; }
+        public string FbOther { get => fbOther; set => fbOther = value; }
     }
 }

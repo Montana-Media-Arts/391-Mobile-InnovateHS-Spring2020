@@ -30,6 +30,20 @@ namespace InnovateServer.App_Code.Database
             database.uploadCommand(query, parameters);
         }
 
+        //Updates the provided Student in the DB.
+        public void updateNPC(Student student)
+        {
+            string query = "spUpdateStudent";
+            SqlParameter[] parameters = new SqlParameter[12];
+            parameters[0] = new SqlParameter("studentID", student.StudentID);
+            parameters[1] = new SqlParameter("school", student.School);
+            parameters[2] = new SqlParameter("firstName", student.FirstName);
+            parameters[3] = new SqlParameter("lastName", student.LastName);
+            parameters[4] = new SqlParameter("email", student.Email);
+
+            database.uploadCommand(query, parameters);
+        }
+
 
         //Gets a specific user using the passed parameters
         public Student authenticateStudent(Student student)
