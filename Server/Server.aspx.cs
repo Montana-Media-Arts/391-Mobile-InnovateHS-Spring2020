@@ -15,12 +15,12 @@ namespace InnovateServer
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            //insertStudent("1", "2", "3@4.com", "54321");
         }
 
         //Inserts a new student into the database with the provided data.
         [WebMethod]
-        public static bool insertStudent(string firstName, string lastName, string email, string password, string school = null)
+        public static string insertStudent(string firstName, string lastName, string email, string password, string school = null)
         {
             Student newStudent = new Student();
             newStudent.FirstName = firstName;
@@ -33,10 +33,16 @@ namespace InnovateServer
             Byte[] passwordBytes = encoder.GetBytes(password);
             newStudent.Password = passwordBytes;
 
+            //Let the database begin
             StudentsTable studentsTable = new StudentsTable(new DatabaseConnection());
-            studentsTable.insertStudent(newStudent);
+            if(studentsTable.checkEmail(newStudent.Email)) return "A user with this email already exists.";
+            else studentsTable.insertStudent(newStudent);
 
-            return true;
+            //Verify student was entered into database and return a useful message to the frontend guys for testing
+            Student verifyStudent = studentsTable.authenticateStudent(newStudent);
+            if (verifyStudent != null) return "The student was added to and retrieved from the database successfully.";
+            else return "The student's retrieval from the database was unsuccessful.";
+
         }
     }
 }
