@@ -20,29 +20,69 @@ namespace InnovateServer
 
         //Inserts a new student into the database with the provided data.
         [WebMethod]
-        public static string insertStudent(string firstName, string lastName, string email, string password, string school = null)
+        public static DataPackage insertStudent(string firstName, string lastName, string email, string password, string school = null)
         {
-            Student newStudent = new Student();
-            newStudent.FirstName = firstName;
-            newStudent.LastName = lastName;
-            newStudent.Email = email;
-            newStudent.School = school;
+            DataPackage package = new DataPackage();
 
-            //Encode password as bytes for varbinary
-            UTF8Encoding encoder = new UTF8Encoding();
-            Byte[] passwordBytes = encoder.GetBytes(password);
-            newStudent.Password = passwordBytes;
+            try
+            {
+                Student newStudent = new Student();
+                newStudent.FirstName = firstName;
+                newStudent.LastName = lastName;
+                newStudent.Email = email;
+                newStudent.School = school;
 
-            //Let the database begin
-            StudentsTable studentsTable = new StudentsTable(new DatabaseConnection());
-            if(studentsTable.checkEmail(newStudent.Email)) return "A user with this email already exists.";
-            else studentsTable.insertStudent(newStudent);
+                //Encode password as bytes for varbinary
+                UTF8Encoding encoder = new UTF8Encoding();
+                Byte[] passwordBytes = encoder.GetBytes(password);
+                newStudent.Password = passwordBytes;
 
-            //Verify student was entered into database and return a useful message to the frontend guys for testing
-            Student verifyStudent = studentsTable.authenticateStudent(newStudent);
-            if (verifyStudent != null) return "The student was added to and retrieved from the database successfully.";
-            else return "The student's retrieval from the database was unsuccessful.";
+                //Let the database begin
+                StudentsTable studentsTable = new StudentsTable(new DatabaseConnection());
+                if (studentsTable.checkEmail(newStudent.Email))
+                {
+                    package.Message = "A user with this email already exists.";
+                    package.WasSuccessful = false;
+                }  
+                else studentsTable.insertStudent(newStudent);
 
+                //Verify student was entered into database and return a useful message to the frontend guys for testing
+                Student verifyStudent = studentsTable.authenticateStudent(newStudent);
+                if (verifyStudent != null) package.Message = "The student was added to and retrieved from the database successfully.";
+                else
+                {
+                    package.Message = "The student's retrieval from the database was unsuccessful.";
+                    package.WasSuccessful = false;
+                }     
+            }
+            catch (Exception e)
+            {
+                package.WasSuccessful = false;
+                package.Message = e.Message;
+            }
+
+            return package;
+        }
+
+        //Inserts a new student into the database with the provided data.
+        [WebMethod]
+        public static DataPackage getClasses()
+        {
+            DataPackage package = new DataPackage();
+
+            try
+            {
+                //Let the database begin
+                SessionTable sessionTable = new SessionTable(new DatabaseConnection());
+                List<Session> sessions = sessionTable.getSessions();
+                package.Data = sessions;
+            }
+            catch (Exception e)
+            {
+                package.WasSuccessful = false;
+                package.Message = e.Message;
+            }
+            return package;
         }
     }
 }

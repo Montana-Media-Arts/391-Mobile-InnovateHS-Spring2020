@@ -73,7 +73,9 @@
   <ItemGroup>
     <Compile Include="App_Code\Database\DatabaseConnection.cs" />
     <Compile Include="App_Code\Database\DataPackage.cs" />
+    <Compile Include="App_Code\Database\SessionTable.cs" />
     <Compile Include="App_Code\Database\StudentTable.cs" />
+    <Compile Include="App_Code\Entities\Session.cs" />
     <Compile Include="App_Code\Entities\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.aspx.cs">
