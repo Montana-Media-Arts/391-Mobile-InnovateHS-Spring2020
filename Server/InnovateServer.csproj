@@ -75,6 +75,7 @@
     <Compile Include="App_Code\Database\DataPackage.cs" />
     <Compile Include="App_Code\Database\SessionTable.cs" />
     <Compile Include="App_Code\Database\StudentTable.cs" />
+    <Compile Include="App_Code\Database\TopicTable.cs" />
     <Compile Include="App_Code\Entities\Session.cs" />
     <Compile Include="App_Code\Entities\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

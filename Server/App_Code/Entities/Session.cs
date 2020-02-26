@@ -13,7 +13,7 @@ namespace InnovateServer.App_Code.Entities
         private int topicID;
         private string topicName;
         private string description;
-        private static readonly int maxStudents = 25;
+        private static readonly int maxStudents = 0;
         private int currentStudents;
         private bool isFull;
         private DateTime? time;          //Times not yet configured, dont use this.

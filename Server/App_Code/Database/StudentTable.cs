@@ -9,12 +9,12 @@ using System.Web;
 
 namespace InnovateServer.App_Code.Database
 {
-    public class StudentsTable
+    public class StudentTable
     {
         protected DatabaseConnection database;
         protected UTF8Encoding encoder = new UTF8Encoding();
 
-        public StudentsTable(DatabaseConnection database)
+        public StudentTable(DatabaseConnection database)
         {
             this.database = database;
         }
@@ -45,15 +45,12 @@ namespace InnovateServer.App_Code.Database
         }
 
         //Updates the provided Student in the DB.
-        public void updateNPC(Student student)
+        public void updateStudentTopics(int choiceOneID, int choiceTwoID)
         {
-            string query = "spUpdateStudent";
-            SqlParameter[] parameters = new SqlParameter[12];
-            parameters[0] = new SqlParameter("studentID", student.StudentID);
-            parameters[1] = new SqlParameter("school", student.School);
-            parameters[2] = new SqlParameter("firstName", student.FirstName);
-            parameters[3] = new SqlParameter("lastName", student.LastName);
-            parameters[4] = new SqlParameter("email", student.Email);
+            string query = "spUpdateStudentTopics";
+            SqlParameter[] parameters = new SqlParameter[2];
+            parameters[0] = new SqlParameter("topicChoice1", choiceOneID);
+            parameters[1] = new SqlParameter("topicChoice2", choiceTwoID);
 
             database.uploadCommand(query, parameters);
         }
