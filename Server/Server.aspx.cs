@@ -31,11 +31,7 @@ namespace InnovateServer
                 newStudent.LastName = lastName;
                 newStudent.Email = email;
                 newStudent.School = school;
-
-                //Encode password as bytes for varbinary
-                UTF8Encoding encoder = new UTF8Encoding();
-                Byte[] passwordBytes = encoder.GetBytes(password);
-                newStudent.Password = passwordBytes;
+                newStudent.Password = password;
 
                 //Let the database begin
                 StudentsTable studentsTable = new StudentsTable(new DatabaseConnection());
@@ -48,7 +44,7 @@ namespace InnovateServer
 
                 //Verify student was entered into database and return a useful message to the frontend guys for testing
                 Student verifyStudent = studentsTable.authenticateStudent(newStudent);
-                if (verifyStudent != null) package.Message = "The student was added to and retrieved from the database successfully.";
+                if (studentsTable.authenticateStudent(newStudent) != null) package.Message = "The student was added to and retrieved from the database successfully.";
                 else
                 {
                     package.Message = "The student's retrieval from the database was unsuccessful.";
@@ -64,7 +60,9 @@ namespace InnovateServer
             return package;
         }
 
-        //Inserts a new student into the database with the provided data.
+
+
+        //Gets all of the Faculty Sessions and whether or not they are full.
         [WebMethod]
         public static DataPackage getClasses()
         {
@@ -83,6 +81,58 @@ namespace InnovateServer
                 package.Message = e.Message;
             }
             return package;
+        }
+
+
+
+        //Inserts a student's session choice into the database.
+        //Not yet Tested, more performance tweaks desired.
+        [WebMethod]
+        public static DataPackage insertStudentSession(string email, string password, int choiceOneID, int choiceTwoID, int choiceThreeID)
+        {
+            DataPackage package = new DataPackage();
+            
+            try
+            {
+                DatabaseConnection connection = new DatabaseConnection();
+
+                //Check if student authenticates, and if so proceed.  Look into caching these or other faster alternatives to calling the database each time.
+                StudentsTable studentTable = new StudentsTable(connection);
+                Student student = studentTable.authenticateStudent(new Student(email, password));
+                if (student == null)    //Not found
+                {
+                    package.WasSuccessful = false;
+                    package.Message = "Student credentials not found.";
+                    return package;
+                }
+
+                //Check which classes are still open, and decide which is best to enroll in.
+                SessionTable sessionTable = new SessionTable(connection);
+                Dictionary<int, int> sessions = sessionTable.getSessionStudentCounts();
+
+                int chosenID;
+                if (!sessions.ContainsKey(choiceOneID) || sessions[choiceOneID] < App_Code.Entities.Session.MaxStudents) chosenID = choiceOneID;
+                else if (!sessions.ContainsKey(choiceTwoID) || sessions[choiceTwoID] < App_Code.Entities.Session.MaxStudents) chosenID = choiceTwoID;
+                else if (!sessions.ContainsKey(choiceThreeID) || sessions[choiceThreeID] < App_Code.Entities.Session.MaxStudents) chosenID = choiceThreeID;
+                else    //No Openings found in selected sessions, kickback to the front-end. :(
+                {
+                    package.WasSuccessful = false;
+                    package.Message = "All selected sessions are full.";
+                    return package;
+                }
+
+                //Insert Student's choice
+                studentTable.insertStudentClass(student, chosenID);
+                package.Message = "Session chosen successfully!";
+                return package;
+            }
+
+            catch (Exception e)
+            {
+                package.WasSuccessful = false;
+                package.Message = e.Message;
+                return package;
+            }
         }
     }
 }

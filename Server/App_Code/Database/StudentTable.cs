@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace InnovateServer.App_Code.Database
@@ -11,6 +12,7 @@ namespace InnovateServer.App_Code.Database
     public class StudentsTable
     {
         protected DatabaseConnection database;
+        protected UTF8Encoding encoder = new UTF8Encoding();
 
         public StudentsTable(DatabaseConnection database)
         {
@@ -19,13 +21,25 @@ namespace InnovateServer.App_Code.Database
 
         public void insertStudent(Student student)
         {
+
             string query = "spInsertStudent";
             SqlParameter[] parameters = new SqlParameter[5];
             parameters[0] = new SqlParameter("school", student.School);
             parameters[1] = new SqlParameter("firstName", student.FirstName);
             parameters[2] = new SqlParameter("lastName", student.LastName);
             parameters[3] = new SqlParameter("email", student.Email);
-            parameters[4] = new SqlParameter("password", student.Password);
+            parameters[4] = new SqlParameter("password", encoder.GetBytes(student.Password));
+
+            database.uploadCommand(query, parameters);
+        }
+
+        //Enrolls a student in a class
+        public void insertStudentClass(Student student, int classID)
+        {
+            string query = "spInsertStudentClass";
+            SqlParameter[] parameters = new SqlParameter[2];
+            parameters[0] = new SqlParameter("studentID", student.StudentID);
+            parameters[1] = new SqlParameter("classID", classID);
 
             database.uploadCommand(query, parameters);
         }
@@ -52,13 +66,13 @@ namespace InnovateServer.App_Code.Database
             string query = "spAuthenticateStudent";
             //Obtain Parameters
             SqlParameter[] parameters = new SqlParameter[2];
-            parameters[0] = new SqlParameter("email", student.Email);    //Set sql parameter 1 (with sql name of "userID"), with a value of userID
-            parameters[1] = new SqlParameter("password", student.Password);    //Set sql parameter 1 (with sql name of "userID"), with a value of userID
+            parameters[0] = new SqlParameter("email", student.Email);
+            parameters[1] = new SqlParameter("password", encoder.GetBytes(student.Password));
 
             //Retrieve Data
             DataSet data = database.downloadCommand(query, parameters);
 
-            //Return whether or not the db found the user by returning the userID or 0.
+            //Return whether or not the db found the user by returning the student or null.
             if (data.Tables[0].Rows.Count == 1)
             {
                 student.StudentID = (Int32)data.Tables[0].Rows[0]["studentID"];

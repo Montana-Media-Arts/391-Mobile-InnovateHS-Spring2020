@@ -55,10 +55,36 @@ namespace InnovateServer.App_Code.Database
                 session.Room = room;
                 session.Building = building;
                 session.Time = time;
-                if (session.CurrentStudents >= session.MaxStudents) session.IsFull = true;
+                if (session.CurrentStudents >= Session.MaxStudents) session.IsFull = true;
                 else session.IsFull = false;
 
                 sessions.Add(session);
+            }
+
+            return sessions;
+        }
+
+
+
+        //Similar to getSessions but designed to be faster.  Only returns the raw counts and ids foreach class that has students.
+        public Dictionary<int, int> getSessionStudentCounts()
+        {
+            //Make query
+            string query = "spGetClassStudentCounts";
+
+            //Retrieve Data
+            DataSet data = database.downloadCommand(query);
+
+            //Assemble the List
+            Dictionary<int, int> sessions = new Dictionary<int, int>();
+
+            //Return useful data
+            for (int i = 0; i < data.Tables[0].Rows.Count; i++)
+            {
+                int classID = (Int32)data.Tables[0].Rows[i]["classID"];
+                int students = (Int32)data.Tables[0].Rows[i][1];
+
+                sessions.Add(classID, students);
             }
 
             return sessions;

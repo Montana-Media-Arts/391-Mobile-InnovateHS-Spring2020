@@ -13,7 +13,7 @@ namespace InnovateServer.App_Code.Entities
         private int topicID;
         private string topicName;
         private string description;
-        private int maxStudents = 25;
+        private static readonly int maxStudents = 25;
         private int currentStudents;
         private bool isFull;
         private DateTime? time;          //Times not yet configured, dont use this.
@@ -30,7 +30,7 @@ namespace InnovateServer.App_Code.Entities
         public string Building { get => building; set => building = value; }
         public string Room { get => room; set => room = value; }
         public bool IsFull { get => isFull; set => isFull = value; }
-        public int MaxStudents { get => maxStudents; set => maxStudents = value; }
+        public static int MaxStudents { get => maxStudents;}
     }   
 
 }
