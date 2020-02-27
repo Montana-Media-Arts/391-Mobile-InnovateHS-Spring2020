@@ -67,12 +67,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\IF_Doors.jpg" />
+    <Content Include="InnovationFactory.html" />
+    <Content Include="Images\Inside_IF.jpg" />
     <Content Include="Server.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Code\Database\DatabaseConnection.cs" />
     <Compile Include="App_Code\Database\DataPackage.cs" />
+    <Compile Include="App_Code\Database\MadLibTable.cs" />
     <Compile Include="App_Code\Database\SessionTable.cs" />
     <Compile Include="App_Code\Database\StudentTable.cs" />
     <Compile Include="App_Code\Database\TopicTable.cs" />

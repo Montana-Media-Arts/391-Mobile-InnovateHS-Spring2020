@@ -15,7 +15,7 @@ namespace InnovateServer
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //insertStudentSession("bobD@gmail.com", "moo1234", 15, 17, 22);
+            insertMadLib("bobD@gmail.com", "moo123", "d", "d", "d", "d", "d");
         }
 
         //Inserts a new student into the database with the provided data.
@@ -148,22 +148,32 @@ namespace InnovateServer
             {
                 //Let the database begin
                 DatabaseConnection connection = new DatabaseConnection();
+
+                //Authenticate Command Usage
+                StudentTable studentTable = new StudentTable(connection);
+                Student student = studentTable.authenticateStudent(new Student(email, password));
+                if (student == null)    //Not found
+                {
+                    package.WasSuccessful = false;
+                    package.Message = "Student credentials not found.";
+                    return package;
+                }
+
+                //Get Topic Names and make sure our dictionary has the two names we have been provided
                 TopicTable topicTable = new TopicTable(connection);
                 Dictionary<string, int> topics = topicTable.getTopics();
 
-                //Make sure our dictionary has these two names
                 if (topics.ContainsKey(choiceOneName) && topics.ContainsKey(choiceTwoName))
                 {
                     //Update the student with their topic choices
-                    StudentTable studentTable = new StudentTable(connection);
-                    studentTable.updateStudentTopics(topics[choiceOneName], topics[choiceTwoName]);
+                    studentTable.updateStudentTopics(student.StudentID, topics[choiceOneName], topics[choiceTwoName]);
                     package.Message = "Topic Preferences updated!";
                     return package;
                 }
-                else     //Bad things have happened
+                else     //Bad things have happened, names provided do not match whats in the database
                 {
                     package.WasSuccessful = false;
-                    package.Message = "Topic Preferences updated!";
+                    package.Message = "Topic Preferences not found.";
                     return package;
                 }
             }
@@ -173,7 +183,45 @@ namespace InnovateServer
                 package.Message = e.Message;
                 return package;
             }
-            
+        }
+
+
+        //Updates the Student with their MadLibs
+        [WebMethod]
+        public static DataPackage insertMadLib(string email, string password, string problemOne, string problemTwo, string verbOne, string verbTwo, string adverb)
+        {
+
+            DataPackage package = new DataPackage();
+
+            try
+            {
+                //Let the database begin
+                DatabaseConnection connection = new DatabaseConnection();
+
+                //Authenticate command Usage
+                StudentTable studentTable = new StudentTable(connection);
+                Student student = studentTable.authenticateStudent(new Student(email, password));
+                if (student == null)    //Not found
+                {
+                    package.WasSuccessful = false;
+                    package.Message = "Student credentials not found.";
+                    return package;
+                }
+
+                //Insert MadLib into database and update Student with MadLibID
+                MadLibTable madLibTable = new MadLibTable(connection);
+                madLibTable.insertMadLibs(problemOne, problemTwo, verbOne, verbTwo, adverb, student.StudentID);
+
+                package.Message = "MadLib inserted successfully!";
+                return package;
+            }
+
+            catch (Exception e)
+            {
+                package.WasSuccessful = false;
+                package.Message = e.Message;
+                return package;
+            }  
         }
     }
 }

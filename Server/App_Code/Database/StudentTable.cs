@@ -21,7 +21,6 @@ namespace InnovateServer.App_Code.Database
 
         public void insertStudent(Student student)
         {
-
             string query = "spInsertStudent";
             SqlParameter[] parameters = new SqlParameter[5];
             parameters[0] = new SqlParameter("school", student.School);
@@ -45,12 +44,13 @@ namespace InnovateServer.App_Code.Database
         }
 
         //Updates the provided Student in the DB.
-        public void updateStudentTopics(int choiceOneID, int choiceTwoID)
+        public void updateStudentTopics(int studentID, int choiceOneID, int choiceTwoID)
         {
-            string query = "spUpdateStudentTopics";
-            SqlParameter[] parameters = new SqlParameter[2];
-            parameters[0] = new SqlParameter("topicChoice1", choiceOneID);
-            parameters[1] = new SqlParameter("topicChoice2", choiceTwoID);
+            string query = "spChooseTopics";
+            SqlParameter[] parameters = new SqlParameter[3];
+            parameters[0] = new SqlParameter("studentID", studentID);
+            parameters[1] = new SqlParameter("topicChoice1", choiceOneID);
+            parameters[2] = new SqlParameter("topicChoice2", choiceTwoID);
 
             database.uploadCommand(query, parameters);
         }
