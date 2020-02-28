@@ -67,6 +67,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EsportsRoom.html" />
+    <Content Include="Images\EsportsFront.jpg" />
+    <Content Include="Images\EsportsKeyboard.jpg" />
+    <Content Include="Images\EsportsPC.jpg" />
+    <Content Include="Images\GrizEsportsBanner.jpg" />
     <Content Include="Images\IF_Doors.jpg" />
     <Content Include="InnovationFactory.html" />
     <Content Include="Images\Inside_IF.jpg" />
