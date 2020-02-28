@@ -56,6 +56,20 @@ namespace InnovateServer.App_Code.Database
         }
 
 
+        //Updates the provided Student's feedback info.
+        public void updateStudentFeedback(int studentID, string liked, string better, string other, bool wantOfferings)
+        {
+            string query = "spUpdateStudentFeedback";
+            SqlParameter[] parameters = new SqlParameter[5];
+            parameters[0] = new SqlParameter("studentID", studentID);
+            parameters[1] = new SqlParameter("fbLiked", liked);
+            parameters[2] = new SqlParameter("fbBetter", better);
+            parameters[3] = new SqlParameter("fbWantOfferings", wantOfferings);
+            parameters[4] = new SqlParameter("fbOther", other);
+            database.uploadCommand(query, parameters);
+        }
+
+
         //Gets a specific user using the passed parameters
         public Student authenticateStudent(Student student)
         {

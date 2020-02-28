@@ -15,7 +15,7 @@ namespace InnovateServer
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            insertMadLib("bobD@gmail.com", "moo123", "d", "d", "d", "d", "d");
+          // insertStudentFeedback("bobD@gmail.com", "moo123", "Meow", "Meow", "Meow", true);
         }
 
         //Inserts a new student into the database with the provided data.
@@ -222,6 +222,44 @@ namespace InnovateServer
                 package.Message = e.Message;
                 return package;
             }  
+        }
+
+
+        //Updates the Student with their feedback information
+        [WebMethod]
+        public static DataPackage insertStudentFeedback(string email, string password, string liked, string better, string other, bool wantOfferings)
+        {
+
+            DataPackage package = new DataPackage();
+
+            try
+            {
+                //Let the database begin
+                DatabaseConnection connection = new DatabaseConnection();
+
+                //Authenticate command Usage
+                StudentTable studentTable = new StudentTable(connection);
+                Student student = studentTable.authenticateStudent(new Student(email, password));
+                if (student == null)    //Not found
+                {
+                    package.WasSuccessful = false;
+                    package.Message = "Student credentials not found.";
+                    return package;
+                }
+
+                //Insert MadLib into database and update Student with MadLibID
+                studentTable.updateStudentFeedback(student.StudentID, liked, better, other, wantOfferings);
+
+                package.Message = "Feedback inserted successfully!";
+                return package;
+            }
+
+            catch (Exception e)
+            {
+                package.WasSuccessful = false;
+                package.Message = e.Message;
+                return package;
+            }
         }
     }
 }
