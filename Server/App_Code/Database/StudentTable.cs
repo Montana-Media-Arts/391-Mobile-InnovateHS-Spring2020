@@ -43,6 +43,18 @@ namespace InnovateServer.App_Code.Database
             database.uploadCommand(query, parameters);
         }
 
+
+        //Updates student's session enrollment
+        public void updateStudentClass(Student student, int classID)
+        {
+            string query = "spUpdateStudentClass";
+            SqlParameter[] parameters = new SqlParameter[2];
+            parameters[0] = new SqlParameter("studentID", student.StudentID);
+            parameters[1] = new SqlParameter("classID", classID);
+
+            database.uploadCommand(query, parameters);
+        }
+
         //Updates the provided Student in the DB.
         public void updateStudentTopics(int studentID, int choiceOneID, int choiceTwoID)
         {
@@ -70,6 +82,16 @@ namespace InnovateServer.App_Code.Database
         }
 
 
+        //Updates the provided Student's feedback info.
+        public void updateStudentRegistrationComplete(int studentID)
+        {
+            string query = "spUpdateStudentRegistrationComplete";
+            SqlParameter[] parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("studentID", studentID);
+            database.uploadCommand(query, parameters);
+        }
+
+
         //Gets a specific user using the passed parameters
         public Student authenticateStudent(Student student)
         {
@@ -90,6 +112,7 @@ namespace InnovateServer.App_Code.Database
                 student.School = data.Tables[0].Rows[0]["school"].ToString();
                 student.FirstName = data.Tables[0].Rows[0]["firstName"].ToString();
                 student.LastName = data.Tables[0].Rows[0]["lastName"].ToString();
+                student.RegistrationComplete = Convert.ToBoolean(data.Tables[0].Rows[0]["registrationComplete"]);
 
                 return student;
             }

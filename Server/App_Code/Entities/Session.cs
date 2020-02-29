@@ -19,6 +19,7 @@ namespace InnovateServer.App_Code.Entities
         private DateTime? time;          //Times not yet configured, dont use this.
         private string building;        //All buildings are currently null, dont use this.
         private string room;            //All buildings are currently null, dont use this.
+        private string speakerName;
 
         public int ClassID { get => classID; set => classID = value; }
         public string Name { get => className; set => className = value; }
@@ -31,6 +32,7 @@ namespace InnovateServer.App_Code.Entities
         public string Room { get => room; set => room = value; }
         public bool IsFull { get => isFull; set => isFull = value; }
         public static int MaxStudents { get => maxStudents;}
+        public string SpeakerName { get => speakerName; set => speakerName = value; }
     }   
 
 }

@@ -65,6 +65,46 @@ namespace InnovateServer.App_Code.Database
         }
 
 
+        //Returns all of the Faculty Sessions with their current student totals.
+        public Session getStudentSession(int studentID)
+        {
+            //Make query
+            string query = "spGetStudentClasses";
+
+            //Obtain Parameters
+            SqlParameter[] parameters = new SqlParameter[1];
+            parameters[0] = new SqlParameter("studentID", studentID);
+
+            //Retrieve Data
+            DataSet data = database.downloadCommand(query, parameters);
+
+            //Return useful data
+            if (data.Tables[0].Rows.Count == 1)
+            {
+                Session session = new Session();
+
+                int classID = (Int32)data.Tables[0].Rows[0]["classID"];
+                string className = data.Tables[0].Rows[0]["className"].ToString();
+                string building = data.Tables[0].Rows[0]["building"].ToString();
+                string room = data.Tables[0].Rows[0]["room"].ToString();
+                string description = data.Tables[0].Rows[0]["description"].ToString();
+                string speakerName = data.Tables[0].Rows[0]["speakerName"].ToString();
+                string topicName = data.Tables[0].Rows[0]["topicName"].ToString();
+
+                session.ClassID = classID;
+                session.Name = className;
+                session.Building = building;
+                session.Room = room;
+                session.Description = description;
+                session.SpeakerName = speakerName;
+                session.TopicName = topicName;
+
+                return session;
+            }
+            else return null;
+        }
+
+
 
         //Similar to getSessions but designed to be faster.  Only returns the raw counts and ids foreach class that has students.
         public Dictionary<int, int> getSessionStudentCounts()

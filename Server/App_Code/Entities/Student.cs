@@ -18,6 +18,7 @@ namespace InnovateServer.App_Code.Entities
         private string fbWantOfferings;
         private string fbOther;
         private int[] topicChoices = new int[2];
+        private bool registrationComplete = false;
 
         //Blank Student
         public Student() { }
@@ -40,5 +41,6 @@ namespace InnovateServer.App_Code.Entities
         public string School { get => school; set => school = value; }
         public string Password { get => password; set => password = value; }
         public string FbOther { get => fbOther; set => fbOther = value; }
+        public bool RegistrationComplete { get => registrationComplete; set => registrationComplete = value; }
     }
 }

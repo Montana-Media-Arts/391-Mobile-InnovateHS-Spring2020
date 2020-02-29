@@ -15,7 +15,7 @@ namespace InnovateServer
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-          // insertStudentFeedback("bobD@gmail.com", "moo123", "Meow", "Meow", "Meow", true);
+            //insertStudentSession("bobD@gmail.com", "moo123", 17, 19, 21);
         }
 
         //Inserts a new student into the database with the provided data.
@@ -37,7 +37,7 @@ namespace InnovateServer
                 StudentTable studentsTable = new StudentTable(new DatabaseConnection());
                 if (studentsTable.checkEmail(newStudent.Email))
                 {
-                    package.Message = "A user with this email already exists.";
+                    package.Message = "The email has already been entered.";
                     package.WasSuccessful = false;
                     return package;
                 }  
@@ -57,12 +57,42 @@ namespace InnovateServer
             catch (Exception e)
             {
                 package.WasSuccessful = false;
-                package.Message = e.Message;
+                package.Message = "Something went wrong.";
                 return package;
             }
         }
 
+        //Authenticates a student against the database with the provided data.
+        [WebMethod]
+        public static DataPackage loginStudent(string email, string password)
+        {
+            DataPackage package = new DataPackage();
 
+            try
+            {
+                //Verify student was entered into database and return a useful message to the frontend guys for testing
+                StudentTable studentTable = new StudentTable(new DatabaseConnection());
+                Student student = studentTable.authenticateStudent(new Student(email, password));
+                if (studentTable.authenticateStudent(student) != null)
+                {
+                    package.Message = "Student login successful!";
+                    package.Data = student;
+                }
+                else
+                {
+                    package.Message = "Student login unsuccessful.";
+                    package.WasSuccessful = false;
+                }
+
+                return package;
+            }
+            catch (Exception e)
+            {
+                package.WasSuccessful = false;
+                package.Message = "Something went wrong.";
+                return package;
+            }
+        }
 
         //Gets all of the Faculty Sessions and whether or not they are full.
         [WebMethod]
@@ -123,10 +153,22 @@ namespace InnovateServer
                     return package;
                 }
 
+                //Student already enrolled in a session, overwrite existing
+                if(sessionTable.getStudentSession(student.StudentID) != null)
+                {
+                    studentTable.updateStudentClass(student, chosenID);
+                    package.Message = "Session updated successfully!";
+                    return package;
+                }
+
                 //Insert Student's choice
-                studentTable.insertStudentClass(student, chosenID);
-                package.Message = "Session chosen successfully!";
-                return package;
+                else
+                {
+                    
+                    studentTable.insertStudentClass(student, chosenID);
+                    package.Message = "Session chosen successfully!";
+                    return package;
+                }
             }
 
             catch (Exception e)
@@ -251,6 +293,52 @@ namespace InnovateServer
                 studentTable.updateStudentFeedback(student.StudentID, liked, better, other, wantOfferings);
 
                 package.Message = "Feedback inserted successfully!";
+                return package;
+            }
+
+            catch (Exception e)
+            {
+                package.WasSuccessful = false;
+                package.Message = e.Message;
+                return package;
+            }
+        }
+
+
+
+        //Retrieves a student's faculty session information
+        //Not ready for actual use, breaks for classes with 2+ instructors.
+        [WebMethod]
+        public static DataPackage retrieveStudentSession(string email, string password)
+        {
+            DataPackage package = new DataPackage();
+
+            try
+            {
+                DatabaseConnection connection = new DatabaseConnection();
+                //Authenticate command Usage
+                StudentTable studentTable = new StudentTable(connection);
+                Student student = studentTable.authenticateStudent(new Student(email, password));
+                if (student == null)    //Not found
+                {
+                    package.WasSuccessful = false;
+                    package.Message = "Student credentials not found.";
+                    return package;
+                }
+
+                //Insert MadLib into database and update Student with MadLibID
+                SessionTable sessionTable = new SessionTable(connection);
+                Session session = sessionTable.getStudentSession(student.StudentID);
+
+                if(session == null)
+                {
+                    package.WasSuccessful = false;
+                    package.Message = "Student has no session...";
+                    return package;
+                }
+
+                package.Data = session;
+                package.Message = "Student session data retrieved successfully!";
                 return package;
             }
 
