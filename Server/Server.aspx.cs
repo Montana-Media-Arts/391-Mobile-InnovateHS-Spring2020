@@ -29,7 +29,7 @@ namespace InnovateServer
                 Student newStudent = new Student();
                 newStudent.FirstName = firstName;
                 newStudent.LastName = lastName;
-                newStudent.Email = email;
+                newStudent.Email = email.ToLower();
                 newStudent.School = school;
                 newStudent.Password = password;
 
@@ -72,7 +72,7 @@ namespace InnovateServer
             {
                 //Verify student was entered into database and return a useful message to the frontend guys for testing
                 StudentTable studentTable = new StudentTable(new DatabaseConnection());
-                Student student = studentTable.authenticateStudent(new Student(email, password));
+                Student student = studentTable.authenticateStudent(new Student(email.ToLower(), password));
                 if (studentTable.authenticateStudent(student) != null)
                 {
                     package.Message = "Student login successful!";
@@ -130,7 +130,7 @@ namespace InnovateServer
 
                 //Check if student authenticates, and if so proceed.  Look into caching these or other faster alternatives to calling the database each time.
                 StudentTable studentTable = new StudentTable(connection);
-                Student student = studentTable.authenticateStudent(new Student(email, password));
+                Student student = studentTable.authenticateStudent(new Student(email.ToLower(), password));
                 if (student == null)    //Not found
                 {
                     package.WasSuccessful = false;
@@ -193,7 +193,7 @@ namespace InnovateServer
 
                 //Authenticate Command Usage
                 StudentTable studentTable = new StudentTable(connection);
-                Student student = studentTable.authenticateStudent(new Student(email, password));
+                Student student = studentTable.authenticateStudent(new Student(email.ToLower(), password));
                 if (student == null)    //Not found
                 {
                     package.WasSuccessful = false;
@@ -242,7 +242,7 @@ namespace InnovateServer
 
                 //Authenticate command Usage
                 StudentTable studentTable = new StudentTable(connection);
-                Student student = studentTable.authenticateStudent(new Student(email, password));
+                Student student = studentTable.authenticateStudent(new Student(email.ToLower(), password));
                 if (student == null)    //Not found
                 {
                     package.WasSuccessful = false;
@@ -281,7 +281,7 @@ namespace InnovateServer
 
                 //Authenticate command Usage
                 StudentTable studentTable = new StudentTable(connection);
-                Student student = studentTable.authenticateStudent(new Student(email, password));
+                Student student = studentTable.authenticateStudent(new Student(email.ToLower(), password));
                 if (student == null)    //Not found
                 {
                     package.WasSuccessful = false;
@@ -318,7 +318,7 @@ namespace InnovateServer
                 DatabaseConnection connection = new DatabaseConnection();
                 //Authenticate command Usage
                 StudentTable studentTable = new StudentTable(connection);
-                Student student = studentTable.authenticateStudent(new Student(email, password));
+                Student student = studentTable.authenticateStudent(new Student(email.ToLower(), password));
                 if (student == null)    //Not found
                 {
                     package.WasSuccessful = false;
