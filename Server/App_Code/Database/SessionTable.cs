@@ -89,6 +89,7 @@ namespace InnovateServer.App_Code.Database
                 string room = data.Tables[0].Rows[0]["room"].ToString();
                 string description = data.Tables[0].Rows[0]["description"].ToString();
                 string speakerName = data.Tables[0].Rows[0]["speakerName"].ToString();
+                string speakerAffiliation = data.Tables[0].Rows[0]["speakerAffiliation"].ToString();
                 string topicName = data.Tables[0].Rows[0]["topicName"].ToString();
 
                 session.ClassID = classID;
@@ -97,6 +98,7 @@ namespace InnovateServer.App_Code.Database
                 session.Room = room;
                 session.Description = description;
                 session.SpeakerName = speakerName;
+                session.SpeakerAffiliation = speakerAffiliation;
                 session.TopicName = topicName;
 
                 return session;

@@ -101,8 +101,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
-    <None Include="Properties\PublishProfiles\innovateServer.dungeonbuddy.net - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\Development %28DungeonBuddy%29.pubxml" />
+    <None Include="Properties\PublishProfiles\Production.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

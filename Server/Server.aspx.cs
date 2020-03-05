@@ -16,6 +16,7 @@ namespace InnovateServer
         protected void Page_Load(object sender, EventArgs e)
         {
             //insertStudent("Bob", "Dog", "bobDDdd@gmail.com", "moo123", 5);
+            DataPackage package = retrieveStudentSession("bobd@gmail.com", "moo123");
         }
 
         //Inserts a new student into the database with the provided data.
