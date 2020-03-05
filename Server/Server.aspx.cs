@@ -15,33 +15,48 @@ namespace InnovateServer
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //insertStudentSession("bobD@gmail.com", "moo123", 17, 19, 21);
+            insertStudent("Bobby", "Doggie", "bobDd@gmail.com", "moo1234", 5);
         }
 
         //Inserts a new student into the database with the provided data.
         [WebMethod]
-        public static DataPackage insertStudent(string firstName, string lastName, string email, string password, string school = null)
+        public static DataPackage insertStudent(string firstName, string lastName, string email, string password, int schoolID, string schoolName = null)
         {
             DataPackage package = new DataPackage();
 
             try
             {
+                DatabaseConnection connection = new DatabaseConnection();
+
                 Student newStudent = new Student();
                 newStudent.FirstName = firstName;
                 newStudent.LastName = lastName;
                 newStudent.Email = email.ToLower();
-                newStudent.School = school;
                 newStudent.Password = password;
 
                 //Let the database begin
-                StudentTable studentsTable = new StudentTable(new DatabaseConnection());
+                StudentTable studentsTable = new StudentTable(connection);
                 if (studentsTable.checkEmail(newStudent.Email))
                 {
                     package.Message = "The email has already been entered.";
                     package.WasSuccessful = false;
                     return package;
-                }  
-                else studentsTable.insertStudent(newStudent);
+                }
+
+                //Student has chosen 'Other' as their school.  Make new school and attach.
+                if(schoolID == -1)
+                {
+                    SchoolTable schoolTable = new SchoolTable(connection);
+                    School school = new School();
+                    school.SchoolName = schoolName;
+                    school.IsOther = true;
+                    newStudent.SchoolID = schoolTable.insertSchool(school);
+                }
+
+                //Else assign to the school id chosen.
+                else newStudent.SchoolID = schoolID;
+
+                studentsTable.insertStudent(newStudent);
 
                 //Verify student was entered into database and return a useful message to the frontend guys for testing
                 Student verifyStudent = studentsTable.authenticateStudent(newStudent);
@@ -116,6 +131,28 @@ namespace InnovateServer
         }
 
 
+        //Gets all of the Faculty Sessions and whether or not they are full.
+        [WebMethod]
+        public static DataPackage getOriginalSchools()
+        {
+            DataPackage package = new DataPackage();
+
+            try
+            {
+                //Let the database begin
+                SchoolTable schoolTable = new SchoolTable(new DatabaseConnection());
+                List<School> sessions = schoolTable.getOriginalSchools();
+                package.Data = sessions;
+            }
+            catch (Exception e)
+            {
+                package.WasSuccessful = false;
+                package.Message = e.Message;
+            }
+            return package;
+        }
+
+
 
         //Inserts a student's session choice into the database.
         //more performance tweaks desired.
@@ -157,6 +194,7 @@ namespace InnovateServer
                 if(sessionTable.getStudentSession(student.StudentID) != null)
                 {
                     studentTable.updateStudentClass(student, chosenID);
+                    studentTable.updateStudentClassChoices(student, choiceOneID, choiceTwoID, choiceThreeID);
                     package.Message = "Session updated successfully!";
                     return package;
                 }

@@ -23,7 +23,7 @@ namespace InnovateServer.App_Code.Database
         {
             string query = "spInsertStudent";
             SqlParameter[] parameters = new SqlParameter[5];
-            parameters[0] = new SqlParameter("school", student.School);
+            parameters[0] = new SqlParameter("schoolID", student.SchoolID);
             parameters[1] = new SqlParameter("firstName", student.FirstName);
             parameters[2] = new SqlParameter("lastName", student.LastName);
             parameters[3] = new SqlParameter("email", student.Email);
@@ -51,6 +51,19 @@ namespace InnovateServer.App_Code.Database
             SqlParameter[] parameters = new SqlParameter[2];
             parameters[0] = new SqlParameter("studentID", student.StudentID);
             parameters[1] = new SqlParameter("classID", classID);
+
+            database.uploadCommand(query, parameters);
+        }
+
+        //Updates student's session choices
+        public void updateStudentClassChoices(Student student, int classID1, int classID2, int classID3)
+        {
+            string query = "spUpdateStudentClassChoices";
+            SqlParameter[] parameters = new SqlParameter[4];
+            parameters[0] = new SqlParameter("studentID", student.StudentID);
+            parameters[1] = new SqlParameter("classChoice1", classID1);
+            parameters[2] = new SqlParameter("classChoice2", classID2);
+            parameters[3] = new SqlParameter("classChoice3", classID3);
 
             database.uploadCommand(query, parameters);
         }
@@ -109,7 +122,7 @@ namespace InnovateServer.App_Code.Database
             if (data.Tables[0].Rows.Count == 1)
             {
                 student.StudentID = (Int32)data.Tables[0].Rows[0]["studentID"];
-                student.School = data.Tables[0].Rows[0]["school"].ToString();
+                student.SchoolID = (Int32)data.Tables[0].Rows[0]["schoolID"];
                 student.FirstName = data.Tables[0].Rows[0]["firstName"].ToString();
                 student.LastName = data.Tables[0].Rows[0]["lastName"].ToString();
                 student.RegistrationComplete = Convert.ToBoolean(data.Tables[0].Rows[0]["registrationComplete"]);
