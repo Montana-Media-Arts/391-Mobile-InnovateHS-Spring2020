@@ -11,7 +11,8 @@ namespace InnovateServer.App_Code.Entities
         private string firstName;
         private string lastName;
         private string email;
-        private int schoolID;
+        private Int32 schoolID;
+        private string otherSchool;
         private string password;
         private string fbLiked;
         private string fbBetter;
@@ -38,9 +39,10 @@ namespace InnovateServer.App_Code.Entities
         public string FbBetter { get => fbBetter; set => fbBetter = value; }
         public string FbWantOfferings { get => fbWantOfferings; set => fbWantOfferings = value; }
         public int[] TopicChoices { get => topicChoices; set => topicChoices = value; }
-        public int SchoolID { get => schoolID; set => schoolID = value; }
+        public Int32 SchoolID { get => schoolID; set => schoolID = value; }
         public string Password { get => password; set => password = value; }
         public string FbOther { get => fbOther; set => fbOther = value; }
         public bool RegistrationComplete { get => registrationComplete; set => registrationComplete = value; }
+        public string OtherSchool { get => otherSchool; set => otherSchool = value; }
     }
 }

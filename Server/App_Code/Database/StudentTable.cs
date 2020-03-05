@@ -22,12 +22,14 @@ namespace InnovateServer.App_Code.Database
         public void insertStudent(Student student)
         {
             string query = "spInsertStudent";
-            SqlParameter[] parameters = new SqlParameter[5];
-            parameters[0] = new SqlParameter("schoolID", student.SchoolID);
-            parameters[1] = new SqlParameter("firstName", student.FirstName);
-            parameters[2] = new SqlParameter("lastName", student.LastName);
-            parameters[3] = new SqlParameter("email", student.Email);
-            parameters[4] = new SqlParameter("password", encoder.GetBytes(student.Password));
+            SqlParameter[] parameters = new SqlParameter[6];
+            parameters[0] = new SqlParameter("firstName", student.FirstName);
+            parameters[1] = new SqlParameter("lastName", student.LastName);
+            parameters[2] = new SqlParameter("email", student.Email);
+            parameters[3] = new SqlParameter("password", encoder.GetBytes(student.Password));
+            if(student.SchoolID != -1) parameters[4] = new SqlParameter("schoolID", student.SchoolID);
+            else parameters[4] = new SqlParameter("schoolID", null);
+            parameters[5] = new SqlParameter("otherSchool", student.OtherSchool);
 
             database.uploadCommand(query, parameters);
         }
@@ -122,7 +124,6 @@ namespace InnovateServer.App_Code.Database
             if (data.Tables[0].Rows.Count == 1)
             {
                 student.StudentID = (Int32)data.Tables[0].Rows[0]["studentID"];
-                student.SchoolID = (Int32)data.Tables[0].Rows[0]["schoolID"];
                 student.FirstName = data.Tables[0].Rows[0]["firstName"].ToString();
                 student.LastName = data.Tables[0].Rows[0]["lastName"].ToString();
                 student.RegistrationComplete = Convert.ToBoolean(data.Tables[0].Rows[0]["registrationComplete"]);
