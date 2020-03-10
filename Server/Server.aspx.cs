@@ -161,16 +161,16 @@ namespace InnovateServer
                 {
                     studentTable.updateStudentClass(student, chosenID);
                     studentTable.updateStudentClassChoices(student, choiceOneID, choiceTwoID, choiceThreeID);
-                    package.Message = "Session updated successfully!";
+                    package.Message = "Update: " + student.Email + " " + chosenID;
                     return package;
                 }
 
                 //Insert Student's choice
                 else
                 {
-                    
                     studentTable.insertStudentClass(student, chosenID);
-                    package.Message = "Session chosen successfully!";
+                    studentTable.updateStudentClassChoices(student, choiceOneID, choiceTwoID, choiceThreeID);
+                    package.Message = "Insert: " + student.Email + " " + chosenID;
                     return package;
                 }
             }
