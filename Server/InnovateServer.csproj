@@ -90,6 +90,7 @@
     <Compile Include="App_Code\Entities\School.cs" />
     <Compile Include="App_Code\Entities\Session.cs" />
     <Compile Include="App_Code\Entities\Student.cs" />
+    <Compile Include="App_Code\Misc\Email.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.aspx.cs">
       <DependentUpon>Server.aspx</DependentUpon>

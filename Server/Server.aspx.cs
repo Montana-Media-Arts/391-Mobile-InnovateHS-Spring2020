@@ -16,7 +16,8 @@ namespace InnovateServer
         protected void Page_Load(object sender, EventArgs e)
         {
             //insertStudent("Bob", "Dog", "bobDDdd@gmail.com", "moo123", 5);
-            DataPackage package = retrieveStudentSession("bobd@gmail.com", "moo123");
+            //DataPackage package = retrieveStudentSession("bobd@gmail.com", "moo123");
+            //Email.sendEmail("emailHere", "Test Email", "This is your password.");
         }
 
         //Inserts a new student into the database with the provided data.
@@ -352,5 +353,28 @@ namespace InnovateServer
                 return package;
             }
         }
+
+
+        //Gets all of the Faculty Sessions and whether or not they are full.
+        [WebMethod]
+        public static DataPackage getOriginalSchools()
+        {
+            DataPackage package = new DataPackage();
+
+            try
+            {
+                //Let the database begin
+                SchoolTable schoolTable = new SchoolTable(new DatabaseConnection());
+                List<School> sessions = schoolTable.getOriginalSchools();
+                package.Data = sessions;
+            }
+            catch (Exception e)
+            {
+                package.WasSuccessful = false;
+                package.Message = e.Message;
+            }
+            return package;
+        }
+
     }
 }
